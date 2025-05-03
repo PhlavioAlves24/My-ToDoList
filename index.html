@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha To-Do List Profissional</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Inclua uma biblioteca de ícones (Ex: Font Awesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <div class="todo-container">
+        <header class="todo-header">
+            <h1>Minhas Tarefas</h1>
+            <div class="todo-actions">
+                <!-- Campo Principal -->
+                <input type="text" id="new-task-input" placeholder="Adicionar nova tarefa..." aria-label="Nova tarefa">
+
+                <!-- Campos Adicionados com Estilos Distintos -->
+                <input type="text" id="new-task-details" placeholder="Detalhes (opcional)..." aria-label="Detalhes da nova tarefa">
+                <select id="new-task-priority" title="Definir Prioridade Inicial" aria-label="Prioridade da nova tarefa">
+                    <option value="low">Prioridade Baixa</option>
+                    <option value="medium">Prioridade Média</option>
+                    <option value="high">Prioridade Alta</option>
+                </select>
+                <!-- Fim dos Campos Adicionados -->
+
+                <button id="add-task-btn" title="Adicionar Tarefa"><i class="fas fa-plus"></i> <span class="btn-text">Adicionar</span></button>
+
+                <div class="filter-sort">
+                    <select id="filter-priority" title="Filtrar por Prioridade" aria-label="Filtrar por Prioridade">
+                        <option value="all">Todas Prioridades</option>
+                        <option value="high">Alta</option>
+                        <option value="medium">Média</option>
+                        <option value="low">Baixa</option>
+                    </select>
+                    <button id="sort-date-btn" title="Ordenar por Data"><i class="fas fa-sort-amount-down"></i> <span class="btn-text">Data</span></button>
+                </div>
+            </div>
+        </header>
+
+        <main class="task-list" id="task-list">
+
+            <!-- Exemplo de Card de Tarefa Pendente - Prioridade Alta -->
+            <div class="task-card priority-high" data-task-id="1">
+                <div class="task-main-info">
+                     <div class="task-content">
+                        <input type="checkbox" class="task-checkbox" id="task-1" aria-labelledby="task-title-1">
+                        <label for="task-1" id="task-title-1" class="task-title">Finalizar relatório trimestral</label>
+                    </div>
+                    <div class="task-meta">
+                        <span class="task-due-date"><i class="far fa-calendar-alt"></i> 25/07/2024</span>
+                        <span class="task-priority high">Alta</span>
+                    </div>
+                </div>
+                <div class="task-card-actions">
+                    <button class="details-btn" title="Ver Detalhes" aria-label="Ver Detalhes da Tarefa 1"><i class="fas fa-info-circle"></i></button>
+                    <button class="edit-btn" title="Editar Tarefa" aria-label="Editar Tarefa 1"><i class="fas fa-pencil-alt"></i></button>
+                    <button class="delete-btn" title="Excluir Tarefa" aria-label="Excluir Tarefa 1"><i class="fas fa-trash-alt"></i></button>
+                </div>
+                <!-- Área de detalhes (oculta por padrão) -->
+                <div class="task-details" style="display: none;">
+                    <p><strong>Detalhes:</strong> Preparar gráficos, revisar dados financeiros e enviar para aprovação da diretoria.</p>
+                    <p><strong>Data de Vencimento:</strong> 25/07/2024</p>
+                    <p><strong>Prioridade:</strong> Alta</p>
+                </div>
+            </div>
+
+            <!-- Exemplo de Card de Tarefa Concluída - Prioridade Média -->
+            <div class="task-card priority-medium completed" data-task-id="2">
+                 <div class="task-main-info">
+                    <div class="task-content">
+                        <input type="checkbox" class="task-checkbox" id="task-2" aria-labelledby="task-title-2" checked>
+                        <label for="task-2" id="task-title-2" class="task-title">Agendar reunião com equipe de Marketing</label>
+                    </div>
+                     <div class="task-meta">
+                        <span class="task-due-date"><i class="far fa-calendar-alt"></i> 22/07/2024</span>
+                        <span class="task-priority medium">Média</span>
+                    </div>
+                </div>
+                <div class="task-card-actions">
+                    <button class="details-btn" title="Ver Detalhes" aria-label="Ver Detalhes da Tarefa 2"><i class="fas fa-info-circle"></i></button>
+                    <button class="edit-btn" title="Editar Tarefa" aria-label="Editar Tarefa 2"><i class="fas fa-pencil-alt"></i></button>
+                    <button class="delete-btn" title="Excluir Tarefa" aria-label="Excluir Tarefa 2"><i class="fas fa-trash-alt"></i></button>
+                </div>
+                 <div class="task-details" style="display: none;">
+                    <p><strong>Detalhes:</strong> Verificar disponibilidade de todos e enviar convite pelo Google Calendar. Pauta: Planejamento Q3.</p>
+                    <p><strong>Data de Vencimento:</strong> 22/07/2024</p>
+                    <p><strong>Prioridade:</strong> Média</p>
+                </div>
+            </div>
+
+            <!-- Exemplo de Card de Tarefa Pendente - Prioridade Baixa -->
+            <div class="task-card priority-low" data-task-id="3">
+                 <div class="task-main-info">
+                    <div class="task-content">
+                        <input type="checkbox" class="task-checkbox" id="task-3" aria-labelledby="task-title-3">
+                        <label for="task-3" id="task-title-3" class="task-title">Pesquisar novas ferramentas de gestão de projetos</label>
+                    </div>
+                     <div class="task-meta">
+                        <span class="task-due-date"><i class="far fa-calendar-alt"></i> 30/07/2024</span>
+                         <span class="task-priority low">Baixa</span>
+                    </div>
+                </div>
+                 <div class="task-card-actions">
+                    <button class="details-btn" title="Ver Detalhes" aria-label="Ver Detalhes da Tarefa 3"><i class="fas fa-info-circle"></i></button>
+                    <button class="edit-btn" title="Editar Tarefa" aria-label="Editar Tarefa 3"><i class="fas fa-pencil-alt"></i></button>
+                    <button class="delete-btn" title="Excluir Tarefa" aria-label="Excluir Tarefa 3"><i class="fas fa-trash-alt"></i></button>
+                </div>
+                 <div class="task-details" style="display: none;">
+                    <p><strong>Detalhes:</strong> Focar em opções com integração Zapier, bom custo-benefício e interface intuitiva. Comparar Asana, Monday e ClickUp.</p>
+                    <p><strong>Data de Vencimento:</strong> 30/07/2024</p>
+                    <p><strong>Prioridade:</strong> Baixa</p>
+                </div>
+            </div>
+            <!-- Fim dos exemplos -->
+
+        </main>
+    </div>
+
+    <!-- Adicionar JavaScript para funcionalidade -->
+    <script src="script.js"></script>
+
+    <!-- MODAL DE ALERTA CUSTOMIZADO -->
+    <div class="modal-overlay" id="custom-alert-overlay" style="display: none;"></div>
+    <div class="modal" id="custom-alert-modal" role="alertdialog" aria-modal="true" aria-labelledby="modal-message" style="display: none;">
+        <div class="modal-content">
+            <p class="modal-message" id="modal-message"></p>
+            <button class="modal-close-btn" id="modal-close-btn">OK</button>
+        </div>
+    </div>
+    <!-- FIM DO MODAL -->
+
+</body>
+</html>
