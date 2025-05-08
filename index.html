@@ -130,7 +130,55 @@
             <button class="modal-close-btn" id="modal-close-btn">OK</button>
         </div>
     </div>
-    <!-- FIM DO MODAL -->
+    <!-- FIM DO MODAL DE ALERTA -->
+
+    <!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO -->
+    <div class="modal-overlay" id="delete-confirm-overlay" style="display: none;"></div>
+    <div class="modal" id="delete-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="delete-confirm-message" style="display: none;">
+        <div class="modal-content">
+            <p class="modal-message" id="delete-confirm-message">Tem certeza que deseja excluir esta tarefa?</p>
+            <div class="modal-actions">
+                <button class="modal-btn" id="delete-cancel-btn">Cancelar</button>
+                <button class="modal-btn" id="delete-confirm-btn">Excluir</button>
+            </div>
+        </div>
+    </div>
+    <!-- FIM DO MODAL DE CONFIRMAÇÃO -->
+
+    <!-- MODAL DE EDIÇÃO DE TAREFA -->
+    <div class="modal-overlay" id="edit-task-overlay" style="display: none;"></div>
+    <div class="modal" id="edit-task-modal" role="dialog" aria-modal="true" aria-labelledby="edit-task-title-heading" style="display: none;">
+        <div class="modal-content">
+            <h2 class="modal-title-heading" id="edit-task-title-heading">Editar Tarefa</h2>
+            <form id="edit-task-form">
+                <div class="form-group">
+                    <label for="edit-task-title-input">Título:</label>
+                    <input type="text" id="edit-task-title-input" name="edit-task-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-task-details-input">Detalhes:</label>
+                    <textarea id="edit-task-details-input" name="edit-task-details" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="edit-task-dueDate-input">Data de Vencimento (AAAA-MM-DD):</label>
+                    <input type="text" id="edit-task-dueDate-input" name="edit-task-dueDate" placeholder="AAAA-MM-DD">
+                </div>
+                <div class="form-group">
+                    <label for="edit-task-priority-select">Prioridade:</label>
+                    <select id="edit-task-priority-select" name="edit-task-priority">
+                        <option value="low">Baixa</option>
+                        <option value="medium">Média</option>
+                        <option value="high">Alta</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="modal-btn" id="edit-task-cancel-btn">Cancelar</button>
+                    <button type="submit" class="modal-btn" id="edit-task-save-btn">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- FIM DO MODAL DE EDIÇÃO -->
 
 </body>
 </html>
