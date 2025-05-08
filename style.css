@@ -23,6 +23,12 @@
     --delete-hover-bg: #fee2e2;
     --details-bg: #f9fafb;
     --hover-bg-light: #f3f4f6;
+    --confirm-delete-bg: #ef4444; /* Cor para botão de confirmação de exclusão */
+    --confirm-delete-hover-bg: #dc2626;
+    --cancel-bg: #e5e7eb;
+    --cancel-hover-bg: #d1d5db;
+    --cancel-text: #374151;
+
 
     /* Transições */
     --transition-fast: all 0.2s ease-in-out;
@@ -490,8 +496,10 @@ body {
     .task-list { padding: 15px 20px 20px 20px; max-height: none; overflow-y: visible; }
     .task-card {
         padding: 15px;
-        display: block !important;
         border-left-width: 5px;
+    }
+    .task-card:not([style*="display: none"]) { /* Aplica display block apenas se não estiver oculto pelo JS */
+        display: block !important;
     }
     .task-card:hover { transform: none; }
 
@@ -558,6 +566,7 @@ body {
 
     .task-list { padding: 10px; }
     .task-card { padding: 12px; margin-bottom: 12px; border-radius: 8px; border-left-width: 4px; }
+
     .task-title { font-size: 1.05rem; }
     .task-due-date, .task-priority { font-size: 0.8rem; }
     .task-priority { padding: 3px 10px; }
@@ -612,6 +621,14 @@ body {
 
 .modal-content {
     padding: 25px 30px;
+    /* text-align: center; Removido para permitir alinhamento à esquerda no form */
+}
+
+.modal-title-heading {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 20px;
     text-align: center;
 }
 
@@ -621,12 +638,39 @@ body {
     line-height: 1.6;
     margin: 0 0 25px 0; /* Espaço abaixo da mensagem */
     word-wrap: break-word; /* Quebra palavras longas */
+    text-align: center; /* Para o modal de alerta */
 }
 
-.modal-close-btn {
-    /* Reutiliza estilos do botão principal, mas com ajustes */
+.modal-actions { /* Container para botões de ação */
+    display: flex;
+    justify-content: center; /* Centraliza botões se houver múltiplos */
+    gap: 15px; /* Espaço entre botões */
+    margin-top: 25px; /* Aumentado para dar mais espaço ao form */
+}
+
+.modal-btn { /* Estilo base para botões do modal */
     padding: 10px 25px;
-    height: auto; /* Altura automática baseada no padding */
+    height: auto;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    min-width: 100px; /* Largura mínima para botões */
+}
+.modal-btn:hover {
+    transform: translateY(-1px);
+}
+.modal-btn:active {
+    transform: translateY(0px);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+
+.modal-close-btn { /* Estilo específico para o botão OK do alerta */
+    padding: 10px 25px;
+    height: auto;
     border: none;
     border-radius: 8px;
     background-color: var(--primary-color);
@@ -635,10 +679,9 @@ body {
     font-weight: 500;
     cursor: pointer;
     transition: var(--transition-fast);
-    display: inline-block; /* Para centralizar com text-align */
+    display: inline-block;
     min-width: 80px;
 }
-
 .modal-close-btn:hover {
     background-color: var(--primary-darker);
     transform: translateY(-1px);
@@ -648,30 +691,127 @@ body {
     box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
 }
 
+
+/* --- Estilos para o Modal de Confirmação de Exclusão --- */
+#delete-confirm-modal .modal-message {
+    margin-bottom: 20px;
+}
+
+#delete-confirm-btn {
+    background-color: var(--confirm-delete-bg);
+    color: white;
+}
+#delete-confirm-btn:hover {
+    background-color: var(--confirm-delete-hover-bg);
+}
+
+#delete-cancel-btn {
+    background-color: var(--cancel-bg);
+    color: var(--cancel-text);
+    border: 1px solid var(--border-color);
+}
+#delete-cancel-btn:hover {
+    background-color: var(--cancel-hover-bg);
+}
+
+/* --- Estilos para o Modal de Edição de Tarefa --- */
+#edit-task-modal .modal-content {
+    text-align: left; /* Alinhar conteúdo do form à esquerda */
+}
+
+#edit-task-modal .form-group {
+    margin-bottom: 18px;
+}
+
+#edit-task-modal label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+#edit-task-modal input[type="text"],
+#edit-task-modal textarea,
+#edit-task-modal select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    transition: var(--transition-fast);
+}
+#edit-task-modal input[type="text"]:focus,
+#edit-task-modal textarea:focus,
+#edit-task-modal select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: var(--input-bg-focus);
+    box-shadow: 0 0 0 3px var(--shadow-color-light);
+}
+
+#edit-task-modal textarea {
+    resize: vertical; /* Permitir redimensionamento vertical */
+    min-height: 60px;
+}
+
+#edit-task-modal select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%236b7280'%3E%3Cpath fill-rule='evenodd' d='M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z' clip-rule='evenodd' /%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 35px;
+}
+
+/* Ajustes para botões do modal de edição */
+#edit-task-save-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+#edit-task-save-btn:hover {
+    background-color: var(--primary-darker);
+}
+
+#edit-task-cancel-btn {
+    background-color: var(--cancel-bg);
+    color: var(--cancel-text);
+    border: 1px solid var(--border-color);
+}
+#edit-task-cancel-btn:hover {
+    background-color: var(--cancel-hover-bg);
+}
+
+
 /* Estilos para quando o modal está visível */
 .modal-overlay.visible,
 .modal.visible {
-    /* display: block; MUDANÇA: Usar flex para centralizar melhor se necessário */
-    display: flex; /* Para alinhar filhos verticalmente se precisar */
-    justify-content: center;
-    align-items: center;
     opacity: 1;
 }
 .modal.visible {
-    /* display: block; */ /* Não precisa se o pai é flex */
-    transform: translate(-50%, -50%) scale(1); /* Anima para o tamanho normal */
+    transform: translate(-50%, -50%) scale(1);
 }
-/* Correção para garantir que modal-overlay ocupe tudo */
 .modal-overlay {
-    display: none; /* Volta pra none quando não visível */
+    display: none;
 }
 .modal-overlay.visible {
-    display: block; /* Overlay volta a ser block normal */
+    display: block;
 }
 .modal {
-    display: none; /* Volta pra none */
+    display: none;
 }
 .modal.visible {
-    display: block; /* Modal volta a ser block */
-    /* A centralização ainda é feita pelo translate(-50%, -50%) */
+    display: block;
+}
+
+/* Pequena correção no CSS para media query para garantir que o display:block funcione bem com a lógica JS */
+@media (max-width: 768px) {
+    .task-card {
+        /* ... outros estilos ... */
+    }
+    .task-card:not([style*="display: none"]) {
+        display: block !important;
+    }
 }
