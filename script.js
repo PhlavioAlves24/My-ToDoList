@@ -5,11 +5,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Seletores do DOM ---
     const newTaskInput = document.getElementById('new-task-input');
     const newTaskDetailsInput = document.getElementById('new-task-details');
+    const newTaskDueDateInput = document.getElementById('new-task-dueDate-input');
     const newTaskPrioritySelect = document.getElementById('new-task-priority');
     const addTaskBtn = document.getElementById('add-task-btn');
     const taskList = document.getElementById('task-list');
     const filterPrioritySelect = document.getElementById('filter-priority');
-    const sortDateBtn = document.getElementById('sort-date-btn');
+    const sortTasksBtn = document.getElementById('sort-tasks-btn');
 
     // >> Seletores para o Modal de Alerta <<
     const customAlertModal = document.getElementById('custom-alert-modal');
@@ -30,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const editTaskForm = document.getElementById('edit-task-form');
     const editTaskTitleInput = document.getElementById('edit-task-title-input');
     const editTaskDetailsInput = document.getElementById('edit-task-details-input');
-    const editTaskDueDateInput = document.getElementById('edit-task-dueDate-input');
+    // const editTaskDueDateInputModal = document.getElementById('edit-task-dueDate-input'); // REMOVIDO
     const editTaskPrioritySelect = document.getElementById('edit-task-priority-select');
     const editTaskSaveBtn = document.getElementById('edit-task-save-btn');
     const editTaskCancelBtn = document.getElementById('edit-task-cancel-btn');
@@ -39,11 +40,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Verifica se os seletores encontraram os elementos
     if (!newTaskInput) console.error("ERRO: Elemento #new-task-input não encontrado!");
     if (!newTaskDetailsInput) console.warn("AVISO: Elemento #new-task-details não encontrado!");
+    if (!newTaskDueDateInput) console.warn("AVISO: Elemento #new-task-dueDate-input não encontrado!");
     if (!newTaskPrioritySelect) console.error("ERRO: Elemento #new-task-priority não encontrado!");
     if (!addTaskBtn) console.error("ERRO: Elemento #add-task-btn não encontrado!");
     if (!taskList) console.error("ERRO: Elemento #task-list não encontrado!");
     if (!filterPrioritySelect) console.error("ERRO: Elemento #filter-priority não encontrado!");
-    if (!sortDateBtn) console.error("ERRO: Elemento #sort-date-btn não encontrado!");
+    if (!sortTasksBtn) console.error("ERRO: Elemento #sort-tasks-btn não encontrado!");
 
     if (!customAlertModal) console.error("ERRO: Elemento #custom-alert-modal não encontrado!");
     if (!customAlertOverlay) console.error("ERRO: Elemento #custom-alert-overlay não encontrado!");
@@ -61,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!editTaskForm) console.error("ERRO: Elemento #edit-task-form não encontrado!");
     if (!editTaskTitleInput) console.error("ERRO: Elemento #edit-task-title-input não encontrado!");
     if (!editTaskDetailsInput) console.error("ERRO: Elemento #edit-task-details-input não encontrado!");
-    if (!editTaskDueDateInput) console.error("ERRO: Elemento #edit-task-dueDate-input não encontrado!");
+    // if (!editTaskDueDateInputModal) console.error("ERRO: Elemento #edit-task-dueDate-input (modal) não encontrado!"); // REMOVIDO
     if (!editTaskPrioritySelect) console.error("ERRO: Elemento #edit-task-priority-select não encontrado!");
     if (!editTaskSaveBtn) console.error("ERRO: Elemento #edit-task-save-btn não encontrado!");
     if (!editTaskCancelBtn) console.error("ERRO: Elemento #edit-task-cancel-btn não encontrado!");
@@ -69,10 +71,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Estado da Aplicação ---
     let tasks = [];
-    let isSortAscending = true;
+    let isSortAscending = false;
     let taskToDeleteId = null;
     let taskToDeleteElement = null;
-    let taskToEditId = null; // Para guardar o ID da tarefa sendo editada
+    let taskToEditId = null;
+
+    const priorityOrder = {
+        'low': 1,
+        'medium': 2,
+        'high': 3
+    };
 
 
     // --- Funções ---
@@ -94,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             overlayElement.style.display = 'none';
             modalElement.style.display = 'none';
-        }, 300); // Tempo da transição CSS
+        }, 300);
     }
 
     function showCustomAlert(message) {
@@ -121,25 +129,22 @@ document.addEventListener('DOMContentLoaded', () => {
         taskToDeleteElement = null;
     }
 
-    // >> Função para mostrar o modal de EDIÇÃO <<
     function showEditTaskModal(task) {
         if (!editTaskModal || !editTaskOverlay || !editTaskForm || !task) return;
 
         taskToEditId = task.id;
         editTaskTitleInput.value = task.title || '';
         editTaskDetailsInput.value = task.details || '';
-        // A data é armazenada como "AAAA-MM-DD" ou null. O input type="text" aceita isso diretamente.
-        editTaskDueDateInput.value = task.dueDate ? task.dueDate.split('T')[0] : '';
+        // editTaskDueDateInputModal.value = task.dueDate ? task.dueDate.split('T')[0] : ''; // REMOVIDO
         editTaskPrioritySelect.value = task.priority || 'low';
 
         showModal(editTaskModal, editTaskOverlay);
         editTaskTitleInput.focus();
     }
 
-    // >> Função para esconder o modal de EDIÇÃO <<
     function hideEditTaskModal() {
         hideModal(editTaskModal, editTaskOverlay);
-        if (editTaskForm) editTaskForm.reset(); // Limpa o formulário
+        if (editTaskForm) editTaskForm.reset();
         taskToEditId = null;
     }
 
@@ -167,27 +172,45 @@ document.addEventListener('DOMContentLoaded', () => {
             tasks = [];
         }
         renderAllTasks();
-        updateSortButtonIcon();
+        updateSortButtonState();
     }
 
-    function parseDate(dateString) { // AAAA-MM-DD
+    function parseDate(dateString) {
         if (!dateString || typeof dateString !== 'string') return null;
-        // Adiciona T00:00:00Z para garantir que seja interpretado como UTC e evitar problemas de fuso horário
-        // ao criar o objeto Date, especialmente para comparação.
+        // Adiciona T00:00:00Z para garantir que seja interpretado como UTC.
         const dateObj = new Date(dateString + 'T00:00:00Z');
+
+        // Verifica se o objeto Date é válido (ex: não é "Invalid Date")
         if (isNaN(dateObj.getTime())) {
-            console.warn(`Data inválida para parseDate: ${dateString}`);
+            // console.warn(`parseDate: Data inválida após new Date(): ${dateString}`);
+            return null;
+        }
+
+        // Extrai ano, mês, dia da string original para validação lógica
+        const parts = dateString.split('-');
+        if (parts.length !== 3) return null; // Formato básico incorreto
+
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10); // Mês na string é 1-12
+        const day = parseInt(parts[2], 10);
+
+        // Compara os componentes extraídos com os componentes do objeto Date (que já auto-corrigiu datas inválidas)
+        // O mês em getUTCMonth() é 0-11, por isso month - 1 na comparação.
+        if (dateObj.getUTCFullYear() !== year ||
+            dateObj.getUTCMonth() !== (month - 1) ||
+            dateObj.getUTCDate() !== day) {
+            // console.warn(`parseDate: Data logicamente inválida (ex: 2023-02-30): ${dateString}. Date obj se tornou: ${dateObj.toISOString()}`);
             return null;
         }
         return dateObj;
     }
 
-    function formatDateDisplay(dateObj) { // Para exibir DD/MM/AAAA
+
+    function formatDateDisplay(dateObj) {
         if (!dateObj || !(dateObj instanceof Date) || isNaN(dateObj.getTime())) {
             return '';
         }
         try {
-            // Usar getUTCDate, getUTCMonth, getUTCFullYear para consistência com parseDate
             const day = String(dateObj.getUTCDate()).padStart(2, '0');
             const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0');
             const year = dateObj.getUTCFullYear();
@@ -211,9 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
             taskCard.classList.add('completed');
         }
 
-        // task.dueDate é "AAAA-MM-DD" ou null.
-        // Precisamos converter para um objeto Date para formatar para DD/MM/AAAA
-        const dateObjForDisplay = parseDate(task.dueDate);
+        const dateObjForDisplay = parseDate(task.dueDate); //dueDate é "AAAA-MM-DD" ou null
         const displayDate = formatDateDisplay(dateObjForDisplay);
 
         taskCard.innerHTML = `
@@ -249,14 +270,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function addTask() {
-        if (!newTaskInput || !newTaskDetailsInput || !newTaskPrioritySelect) {
-            console.error("addTask: Elementos de input não encontrados.");
+        if (!newTaskInput || !newTaskDetailsInput || !newTaskDueDateInput || !newTaskPrioritySelect) {
+            console.error("addTask: Um ou mais elementos de input da header não foram encontrados.");
             return;
         }
 
         const taskTitle = newTaskInput.value.trim();
         const taskDetails = newTaskDetailsInput.value.trim();
         const taskPriority = newTaskPrioritySelect.value;
+        const taskDueDateStr = newTaskDueDateInput.value.trim();
+        let taskDueDateValue = null;
 
         if (taskTitle === '') {
             showCustomAlert('Por favor, digite o título da tarefa.');
@@ -264,12 +287,28 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        if (taskDueDateStr !== '') {
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(taskDueDateStr)) { // Verifica o formato AAAA-MM-DD
+                showCustomAlert('Formato da data de vencimento inválido. Use AAAA-MM-DD ou deixe vazio.');
+                newTaskDueDateInput.focus();
+                return;
+            }
+            // Se o formato está correto, tenta validar a lógica da data
+            if (parseDate(taskDueDateStr)) {
+                taskDueDateValue = taskDueDateStr;
+            } else {
+                showCustomAlert('A data de vencimento inserida é inválida (ex: dia ou mês não existe). Verifique e use o formato AAAA-MM-DD.');
+                newTaskDueDateInput.focus();
+                return;
+            }
+        }
+
         const newTask = {
             id: Date.now().toString(),
             title: taskTitle,
             completed: false,
             priority: taskPriority,
-            dueDate: null, // Armazenado como string "AAAA-MM-DD" ou null
+            dueDate: taskDueDateValue,
             details: taskDetails
         };
 
@@ -278,6 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderAllTasks();
         newTaskInput.value = '';
         newTaskDetailsInput.value = '';
+        newTaskDueDateInput.value = '';
         newTaskPrioritySelect.value = 'low';
         newTaskInput.focus();
     }
@@ -317,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
         detailsElement.style.display = isVisible ? 'none' : 'block';
     }
 
-    function handleEditTask(taskId) { // Renomeado de editTask para handleEditTask para clareza
+    function handleEditTask(taskId) {
         const task = tasks.find(t => t.id === taskId);
         if (task) {
             showEditTaskModal(task);
@@ -347,54 +387,72 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function sortTasksByDate() {
+    function sortTasksByPriority() {
         tasks.sort((a, b) => {
-            // parseDate espera "AAAA-MM-DD" e retorna um objeto Date (ou null)
-            const dateA = parseDate(a.dueDate);
-            const dateB = parseDate(b.dueDate);
+            const priorityA = priorityOrder[a.priority] || 0;
+            const priorityB = priorityOrder[b.priority] || 0;
 
-            if (!dateA && !dateB) return 0;
-            if (!dateA) return isSortAscending ? 1 : -1;
-            if (!dateB) return isSortAscending ? -1 : 1;
-
-            const comparison = dateA.getTime() - dateB.getTime();
+            let comparison = 0;
+            if (priorityA < priorityB) {
+                comparison = -1;
+            } else if (priorityA > priorityB) {
+                comparison = 1;
+            }
             return isSortAscending ? comparison : comparison * -1;
         });
         isSortAscending = !isSortAscending;
-        updateSortButtonIcon();
+        updateSortButtonState();
         saveTasks();
         renderAllTasks();
     }
 
-    function updateSortButtonIcon() {
-         if (!sortDateBtn) return;
-         const icon = sortDateBtn.querySelector('i');
+    function updateSortButtonState() {
+         if (!sortTasksBtn) return;
+         const icon = sortTasksBtn.querySelector('i');
+         const btnTextSpan = sortTasksBtn.querySelector('.btn-text');
+
+         if(btnTextSpan) btnTextSpan.textContent = "Prioridade";
+
          if (icon) {
              if (isSortAscending) {
                  icon.classList.remove('fa-sort-amount-up');
                  icon.classList.add('fa-sort-amount-down');
-                 sortDateBtn.title = "Ordenar por Data (Mais Antiga Primeiro)";
+                 sortTasksBtn.title = "Ordenar por Prioridade (Baixa Primeiro)";
              } else {
                  icon.classList.remove('fa-sort-amount-down');
                  icon.classList.add('fa-sort-amount-up');
-                 sortDateBtn.title = "Ordenar por Data (Mais Nova Primeiro)";
+                 sortTasksBtn.title = "Ordenar por Prioridade (Alta Primeiro)";
              }
          }
      }
 
     // --- Event Listeners ---
 
-    if (addTaskBtn && newTaskInput && newTaskDetailsInput && newTaskPrioritySelect) {
+    if (addTaskBtn && newTaskInput && newTaskDetailsInput && newTaskDueDateInput && newTaskPrioritySelect) {
         addTaskBtn.addEventListener('click', addTask);
-        [newTaskInput, newTaskDetailsInput].forEach(element => {
-            element.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && e.target !== newTaskPrioritySelect) {
-                    e.preventDefault();
-                    addTask();
-                }
-            });
+        [newTaskInput, newTaskDetailsInput, newTaskDueDateInput].forEach(element => {
+            if (element) {
+                element.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && e.target !== newTaskPrioritySelect) {
+                        e.preventDefault();
+                        addTask();
+                    }
+                });
+            }
         });
     }
+
+    if (newTaskDueDateInput) {
+        newTaskDueDateInput.addEventListener('input', (e) => {
+            let value = e.target.value;
+            value = value.replace(/[^\d-]/g, '');
+            if (value.length > 10) {
+                value = value.substring(0, 10);
+            }
+            e.target.value = value;
+        });
+    }
+
 
     if (taskList) {
         taskList.addEventListener('click', (e) => {
@@ -409,7 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 deleteTask(taskId, card);
             }
             else if (e.target.closest('.edit-btn')) {
-                 handleEditTask(taskId); // Chamada para a nova função de edição
+                 handleEditTask(taskId);
             }
             else if (e.target.closest('.details-btn')) {
                 const detailsElement = card.querySelector('.task-details');
@@ -429,20 +487,17 @@ document.addEventListener('DOMContentLoaded', () => {
         filterPrioritySelect.addEventListener('change', filterTasks);
     }
 
-    if (sortDateBtn) {
-         sortDateBtn.addEventListener('click', sortTasksByDate);
+    if (sortTasksBtn) {
+         sortTasksBtn.addEventListener('click', sortTasksByPriority);
     }
 
-    // Listeners para Modal de Alerta
     if (modalCloseBtn) modalCloseBtn.addEventListener('click', hideCustomAlert);
     if (customAlertOverlay) customAlertOverlay.addEventListener('click', hideCustomAlert);
 
-    // Listeners para Modal de Confirmação de Exclusão
     if (deleteConfirmBtn) deleteConfirmBtn.addEventListener('click', confirmActualDelete);
     if (deleteCancelBtn) deleteCancelBtn.addEventListener('click', hideDeleteConfirmModal);
     if (deleteConfirmOverlay) deleteConfirmOverlay.addEventListener('click', hideDeleteConfirmModal);
 
-    // Listeners para Modal de Edição de Tarefa
     if (editTaskForm) {
         editTaskForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -460,23 +515,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 tasks[taskIndex].details = editTaskDetailsInput.value.trim();
                 tasks[taskIndex].priority = editTaskPrioritySelect.value;
 
-                const newDueDateStr = editTaskDueDateInput.value.trim();
-                if (newDueDateStr === '') {
-                    tasks[taskIndex].dueDate = null;
-                } else if (/^\d{4}-\d{2}-\d{2}$/.test(newDueDateStr)) {
-                    // Valida se a data é logicamente correta (parseDate retorna null se não for)
-                    if (parseDate(newDueDateStr)) {
-                        tasks[taskIndex].dueDate = newDueDateStr; // Armazena como "AAAA-MM-DD"
-                    } else {
-                        showCustomAlert('A data inserida é inválida. Verifique o dia, mês e ano. Formato: AAAA-MM-DD.');
-                        editTaskDueDateInput.focus();
-                        return; // Não salva se a data for inválida
-                    }
-                } else {
-                    showCustomAlert('Formato de data inválido. Use AAAA-MM-DD ou deixe vazio.');
-                    editTaskDueDateInput.focus();
-                    return; // Não salva se a data tiver formato inválido
-                }
+                // LÓGICA DE ATUALIZAÇÃO DA DATA DE VENCIMENTO REMOVIDA DAQUI
+                // A data de vencimento original será mantida.
 
                 saveTasks();
                 renderAllTasks();
@@ -490,8 +530,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (editTaskCancelBtn) editTaskCancelBtn.addEventListener('click', hideEditTaskModal);
     if (editTaskOverlay) editTaskOverlay.addEventListener('click', hideEditTaskModal);
 
+    // Listener para restringir entrada no campo de data de vencimento do MODAL DE EDIÇÃO FOI REMOVIDO
+    // if (editTaskDueDateInputModal) { ... } // REMOVIDO
 
-    // Listener global para tecla ESC
+
     window.addEventListener('keydown', (e) => {
          if (e.key === 'Escape') {
             if (customAlertModal && customAlertModal.classList.contains('visible')) {
