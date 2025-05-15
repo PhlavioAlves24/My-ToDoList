@@ -91,7 +91,7 @@ body {
     align-items: center; /* Mantém alinhamento vertical */
 }
 
-/* Estilos base para todos os campos de entrada na header (removidos estilos visuais comuns) */
+/* Estilos base para todos os campos de entrada na header */
 .todo-actions input[type="text"],
 .todo-actions select {
     height: 44px; /* Altura consistente */
@@ -110,9 +110,9 @@ body {
 /* >> ESTILO DISTINTO 1: Input Principal de Nova Tarefa (#new-task-input) << */
 #new-task-input {
     flex-grow: 2;
-    min-width: 150px;
+    min-width: 150px; 
     padding: 11px 16px;
-    border: 1px solid var(--border-color); /* Borda padrão */
+    border: 1px solid var(--border-color);
     background-color: var(--input-bg);
     color: var(--text-primary);
 }
@@ -125,34 +125,57 @@ body {
 /* >> ESTILO DISTINTO 2: Input de Detalhes (#new-task-details) << */
 #new-task-details {
     flex-grow: 1;
-    min-width: 120px;
+    min-width: 120px; 
     flex-basis: 160px;
-    padding: 11px 14px; /* Padding ligeiramente diferente */
-    border: 1px dashed var(--border-color-light); /* Borda tracejada e mais clara */
-    border-radius: 6px; /* Borda um pouco menos arredondada */
+    padding: 11px 14px;
+    border: 1px dashed var(--border-color-light);
+    border-radius: 6px;
     background-color: var(--input-bg);
-    color: var(--text-secondary); /* Cor inicial mais secundária */
+    color: var(--text-secondary);
 }
 #new-task-details:focus {
     border-color: var(--primary-color);
-    border-style: solid; /* Borda sólida no foco */
+    border-style: solid;
     background-color: var(--input-bg-focus);
-    box-shadow: 0 0 0 2px var(--shadow-color-light); /* Sombra de foco mais sutil */
+    box-shadow: 0 0 0 2px var(--shadow-color-light);
     color: var(--text-primary);
 }
 #new-task-details::placeholder {
-    font-style: italic; /* Placeholder em itálico */
+    font-style: italic;
+}
+
+/* >> ESTILO DISTINTO 3: Input de Data de Vencimento (#new-task-dueDate-input) << */
+#new-task-dueDate-input {
+    flex-grow: 0; 
+    min-width: 150px; 
+    flex-basis: 170px; 
+    padding: 11px 14px;
+    border: 1px dotted var(--border-color); 
+    border-radius: 6px;
+    background-color: var(--input-bg);
+    color: var(--text-secondary);
+}
+#new-task-dueDate-input:focus {
+    border-color: var(--primary-color);
+    border-style: solid; 
+    background-color: var(--input-bg-focus);
+    box-shadow: 0 0 0 2px var(--shadow-color-light); 
+    color: var(--text-primary);
+}
+#new-task-dueDate-input::placeholder {
+    font-style: italic;
+    opacity: 0.7;
 }
 
 
-/* >> ESTILO DISTINTO 3: Select de Prioridade (#new-task-priority) << */
+/* >> ESTILO DISTINTO 4: Select de Prioridade (#new-task-priority) << */
 #new-task-priority {
     flex-grow: 0;
-    min-width: 140px;
+    min-width: 140px; 
     padding: 11px 16px;
-    padding-right: 35px; /* Espaço para a seta */
-    border: 1px solid var(--border-color-light); /* Borda clara, mas sólida */
-    border-left: 3px solid var(--text-secondary); /* Indicador visual à esquerda */
+    padding-right: 35px;
+    border: 1px solid var(--border-color-light);
+    border-left: 3px solid var(--text-secondary);
     background-color: var(--input-bg);
     color: var(--text-secondary);
     cursor: pointer;
@@ -164,7 +187,7 @@ body {
 }
 #new-task-priority:focus {
     border-color: var(--primary-color);
-    border-left-color: var(--primary-color); /* Muda cor do indicador no foco */
+    border-left-color: var(--primary-color);
     background-color: var(--input-bg-focus);
     box-shadow: 0 0 0 3px var(--shadow-color-light);
     color: var(--text-primary);
@@ -172,7 +195,7 @@ body {
 /* Fim dos estilos distintos */
 
 
-/* Botão Adicionar e Botão Ordenar (mantidos iguais) */
+/* Botão Adicionar e Botão Ordenar */
 #add-task-btn,
 .filter-sort button {
     padding: 0 18px;
@@ -205,7 +228,7 @@ body {
     box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
 }
 
-/* Container para Filtro e Ordenação (mantido igual) */
+/* Container para Filtro e Ordenação */
 .filter-sort {
     display: flex;
     gap: 10px;
@@ -214,7 +237,7 @@ body {
     flex-shrink: 0;
 }
 
-/* Select de Filtragem (mantido igual) */
+/* Select de Filtragem */
 .filter-sort select {
     padding: 0 15px;
     padding-right: 35px;
@@ -414,15 +437,15 @@ body {
 .task-details {
     background-color: var(--details-bg);
     border-top: 1px dashed var(--border-color);
-    padding: 15px 20px; /* Ajuste simples de padding */
-    margin: 15px -20px -18px calc(-20px - 6px); /* Negative margins */
+    padding: 15px 20px;
+    margin: 15px -20px -18px calc(-20px - 6px);
     font-size: 0.9rem;
     color: var(--text-secondary);
     flex-basis: 100%;
     border-radius: 0 0 10px 10px;
     line-height: 1.5;
     transition: all 0.3s ease-out;
-    padding-left: 20px; /* Alinha com padding geral do card */
+    padding-left: 20px;
 }
 .task-card.completed .task-details {
     padding-left: 20px;
@@ -488,7 +511,9 @@ body {
     .filter-sort { margin-left: 0; }
     #new-task-input { min-width: 120px; }
     #new-task-details { min-width: 100px; flex-basis: 120px; }
+    #new-task-dueDate-input { min-width: 130px; flex-basis: 150px; } 
     #new-task-priority { min-width: 120px; }
+
 
     .btn-text { display: none; }
     #add-task-btn, .filter-sort button { padding: 0 14px; }
@@ -498,7 +523,7 @@ body {
         padding: 15px;
         border-left-width: 5px;
     }
-    .task-card:not([style*="display: none"]) { /* Aplica display block apenas se não estiver oculto pelo JS */
+    .task-card:not([style*="display: none"]) {
         display: block !important;
     }
     .task-card:hover { transform: none; }
@@ -531,7 +556,7 @@ body {
         padding: 12px 15px;
         margin: 15px -15px -15px calc(-15px - 5px);
         border-radius: 0 0 10px 10px;
-        padding-left: 15px; /* Reset padding */
+        padding-left: 15px;
     }
      .task-card.completed .task-details {
          padding-left: 15px;
@@ -549,20 +574,20 @@ body {
         gap: 10px;
         align-items: stretch;
     }
-    /* Mantém estilos distintos, mas força largura total */
     #new-task-input { order: 1; width: 100%; min-width: unset; flex-basis: auto;}
     #new-task-details { order: 2; width: 100%; min-width: unset; flex-basis: auto;}
-    #new-task-priority { order: 3; width: 100%; min-width: unset;}
-    #add-task-btn { order: 4; width: 100%; justify-content: center; }
+    #new-task-dueDate-input { order: 3; width: 100%; min-width: unset; flex-basis: auto;}
+    #new-task-priority { order: 4; width: 100%; min-width: unset;} 
+    #add-task-btn { order: 5; width: 100%; justify-content: center; } 
 
     .filter-sort {
-        order: 5;
+        order: 6; 
         width: 100%;
         justify-content: space-between;
         margin-left: 0;
     }
     .filter-sort select { flex-grow: 1; }
-    .filter-sort button { /* Estilo mantido */ }
+
 
     .task-list { padding: 10px; }
     .task-card { padding: 12px; margin-bottom: 12px; border-radius: 8px; border-left-width: 4px; }
@@ -579,7 +604,7 @@ body {
         padding: 10px 12px;
         margin: 10px -12px -12px calc(-12px - 4px);
         font-size: 0.85rem;
-        padding-left: 12px; /* Reset padding */
+        padding-left: 12px;
     }
     .task-card.completed .task-details {
         padding-left: 12px;
@@ -595,9 +620,9 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Fundo escurecido semi-transparente */
-    z-index: 1000; /* Garante que fique acima de outros conteúdos */
-    display: none; /* Oculto por padrão */
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    display: none;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
 }
@@ -606,22 +631,21 @@ body {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0.95); /* Começa ligeiramente menor */
+    transform: translate(-50%, -50%) scale(0.95);
     background-color: var(--card-bg);
     border-radius: 12px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
-    z-index: 1001; /* Acima do overlay */
+    z-index: 1001;
     min-width: 300px;
-    max-width: 450px; /* Largura máxima */
-    width: 90%; /* Responsivo */
-    display: none; /* Oculto por padrão */
+    max-width: 450px;
+    width: 90%;
+    display: none;
     opacity: 0;
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 .modal-content {
     padding: 25px 30px;
-    /* text-align: center; Removido para permitir alinhamento à esquerda no form */
 }
 
 .modal-title-heading {
@@ -636,19 +660,19 @@ body {
     font-size: 1.05rem;
     color: var(--text-primary);
     line-height: 1.6;
-    margin: 0 0 25px 0; /* Espaço abaixo da mensagem */
-    word-wrap: break-word; /* Quebra palavras longas */
-    text-align: center; /* Para o modal de alerta */
+    margin: 0 0 25px 0;
+    word-wrap: break-word;
+    text-align: center;
 }
 
-.modal-actions { /* Container para botões de ação */
+.modal-actions {
     display: flex;
-    justify-content: center; /* Centraliza botões se houver múltiplos */
-    gap: 15px; /* Espaço entre botões */
-    margin-top: 25px; /* Aumentado para dar mais espaço ao form */
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
 }
 
-.modal-btn { /* Estilo base para botões do modal */
+.modal-btn {
     padding: 10px 25px;
     height: auto;
     border: none;
@@ -657,7 +681,7 @@ body {
     font-weight: 500;
     cursor: pointer;
     transition: var(--transition-fast);
-    min-width: 100px; /* Largura mínima para botões */
+    min-width: 100px;
 }
 .modal-btn:hover {
     transform: translateY(-1px);
@@ -668,7 +692,7 @@ body {
 }
 
 
-.modal-close-btn { /* Estilo específico para o botão OK do alerta */
+.modal-close-btn {
     padding: 10px 25px;
     height: auto;
     border: none;
@@ -716,7 +740,7 @@ body {
 
 /* --- Estilos para o Modal de Edição de Tarefa --- */
 #edit-task-modal .modal-content {
-    text-align: left; /* Alinhar conteúdo do form à esquerda */
+    text-align: left;
 }
 
 #edit-task-modal .form-group {
@@ -753,7 +777,7 @@ body {
 }
 
 #edit-task-modal textarea {
-    resize: vertical; /* Permitir redimensionamento vertical */
+    resize: vertical;
     min-height: 60px;
 }
 
@@ -766,7 +790,6 @@ body {
     padding-right: 35px;
 }
 
-/* Ajustes para botões do modal de edição */
 #edit-task-save-btn {
     background-color: var(--primary-color);
     color: white;
@@ -806,11 +829,7 @@ body {
     display: block;
 }
 
-/* Pequena correção no CSS para media query para garantir que o display:block funcione bem com a lógica JS */
 @media (max-width: 768px) {
-    .task-card {
-        /* ... outros estilos ... */
-    }
     .task-card:not([style*="display: none"]) {
         display: block !important;
     }
