@@ -19,6 +19,7 @@
 
                 <!-- Campos Adicionados com Estilos Distintos -->
                 <input type="text" id="new-task-details" placeholder="Detalhes (opcional)..." aria-label="Detalhes da nova tarefa">
+               
                 <select id="new-task-priority" title="Definir Prioridade Inicial" aria-label="Prioridade da nova tarefa">
                     <option value="low">Prioridade Baixa</option>
                     <option value="medium">Prioridade Média</option>
@@ -35,7 +36,7 @@
                         <option value="medium">Média</option>
                         <option value="low">Baixa</option>
                     </select>
-                    <button id="sort-date-btn" title="Ordenar por Data"><i class="fas fa-sort-amount-down"></i> <span class="btn-text">Data</span></button>
+                    <button id="sort-tasks-btn" title="Ordenar por Prioridade (Alta Primeiro)"><i class="fas fa-sort-amount-up"></i> <span class="btn-text">Prioridade</span></button>
                 </div>
             </div>
         </header>
@@ -62,7 +63,6 @@
                 <!-- Área de detalhes (oculta por padrão) -->
                 <div class="task-details" style="display: none;">
                     <p><strong>Detalhes:</strong> Preparar gráficos, revisar dados financeiros e enviar para aprovação da diretoria.</p>
-                    <p><strong>Data de Vencimento:</strong> 25/07/2024</p>
                     <p><strong>Prioridade:</strong> Alta</p>
                 </div>
             </div>
@@ -110,7 +110,6 @@
                 </div>
                  <div class="task-details" style="display: none;">
                     <p><strong>Detalhes:</strong> Focar em opções com integração Zapier, bom custo-benefício e interface intuitiva. Comparar Asana, Monday e ClickUp.</p>
-                    <p><strong>Data de Vencimento:</strong> 30/07/2024</p>
                     <p><strong>Prioridade:</strong> Baixa</p>
                 </div>
             </div>
@@ -159,10 +158,12 @@
                     <label for="edit-task-details-input">Detalhes:</label>
                     <textarea id="edit-task-details-input" name="edit-task-details" rows="3"></textarea>
                 </div>
+                <!-- REMOVIDO: Campo de Data de Vencimento da Edição
                 <div class="form-group">
                     <label for="edit-task-dueDate-input">Data de Vencimento (AAAA-MM-DD):</label>
                     <input type="text" id="edit-task-dueDate-input" name="edit-task-dueDate" placeholder="AAAA-MM-DD">
                 </div>
+                 -->
                 <div class="form-group">
                     <label for="edit-task-priority-select">Prioridade:</label>
                     <select id="edit-task-priority-select" name="edit-task-priority">
