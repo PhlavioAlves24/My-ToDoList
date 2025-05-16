@@ -8,7 +8,7 @@
     <!-- Inclua uma biblioteca de ícones (Ex: Font Awesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
-    <!-- IMPORTAÇÃO DA GOOGLE FONT -->
+    <!-- IMPORTAÇÃO DA GOOGLE FONT PARA O TÍTULO -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
@@ -17,8 +17,9 @@
 
     <div class="todo-container">
         <header class="todo-header">
-            <!-- H1 COM ESTILO INLINE PARA A FONTE -->
-            <h1 style="font-family: 'Caveat', cursive; font-size: 2.8em; font-weight: 700; text-align: center; color: #333; margin-bottom: 15px;">Minhas Tarefas</h1>
+            <!-- TÍTULO COM FONTE ESTILO ESCRITA À MÃO -->
+            <h1 style="font-family: 'Caveat', cursive; font-size: 2.8em; font-weight: 700; text-align: center; color: #333; margin-bottom: 20px;">Minhas Tarefas</h1>
+            
             <div class="todo-actions">
                 <!-- Campo Principal -->
                 <input type="text" id="new-task-input" placeholder="Adicionar nova tarefa..." aria-label="Nova tarefa">
@@ -26,6 +27,8 @@
                 <!-- Campos Adicionados com Estilos Distintos -->
                 <input type="text" id="new-task-details" placeholder="Detalhes (opcional)..." aria-label="Detalhes da nova tarefa">
                
+                <!-- CAMPO DE DATA DE VENCIMENTO REMOVIDO -->
+
                 <select id="new-task-priority" title="Definir Prioridade Inicial" aria-label="Prioridade da nova tarefa">
                     <option value="low">Prioridade Baixa</option>
                     <option value="medium">Prioridade Média</option>
@@ -57,7 +60,7 @@
                         <label for="task-1" id="task-title-1" class="task-title">Finalizar relatório trimestral</label>
                     </div>
                     <div class="task-meta">
-                        <span class="task-due-date"><i class="far fa-calendar-alt"></i> 25/07/2024</span>
+                        <!-- DATA DE VENCIMENTO REMOVIDA DA EXIBIÇÃO -->
                         <span class="task-priority high">Alta</span>
                     </div>
                 </div>
@@ -69,6 +72,7 @@
                 <!-- Área de detalhes (oculta por padrão) -->
                 <div class="task-details" style="display: none;">
                     <p><strong>Detalhes:</strong> Preparar gráficos, revisar dados financeiros e enviar para aprovação da diretoria.</p>
+                    <!-- DATA DE VENCIMENTO REMOVIDA DOS DETALHES -->
                     <p><strong>Prioridade:</strong> Alta</p>
                 </div>
             </div>
@@ -81,7 +85,7 @@
                         <label for="task-2" id="task-title-2" class="task-title">Agendar reunião com equipe de Marketing</label>
                     </div>
                      <div class="task-meta">
-                        <span class="task-due-date"><i class="far fa-calendar-alt"></i> 22/07/2024</span>
+                        <!-- DATA DE VENCIMENTO REMOVIDA DA EXIBIÇÃO -->
                         <span class="task-priority medium">Média</span>
                     </div>
                 </div>
@@ -92,7 +96,7 @@
                 </div>
                  <div class="task-details" style="display: none;">
                     <p><strong>Detalhes:</strong> Verificar disponibilidade de todos e enviar convite pelo Google Calendar. Pauta: Planejamento Q3.</p>
-                    <p><strong>Data de Vencimento:</strong> 22/07/2024</p>
+                    <!-- DATA DE VENCIMENTO REMOVIDA DOS DETALHES -->
                     <p><strong>Prioridade:</strong> Média</p>
                 </div>
             </div>
@@ -105,7 +109,7 @@
                         <label for="task-3" id="task-title-3" class="task-title">Pesquisar novas ferramentas de gestão de projetos</label>
                     </div>
                      <div class="task-meta">
-                        <span class="task-due-date"><i class="far fa-calendar-alt"></i> 30/07/2024</span>
+                        <!-- DATA DE VENCIMENTO REMOVIDA DA EXIBIÇÃO -->
                          <span class="task-priority low">Baixa</span>
                     </div>
                 </div>
@@ -116,6 +120,7 @@
                 </div>
                  <div class="task-details" style="display: none;">
                     <p><strong>Detalhes:</strong> Focar em opções com integração Zapier, bom custo-benefício e interface intuitiva. Comparar Asana, Monday e ClickUp.</p>
+                    <!-- DATA DE VENCIMENTO REMOVIDA DOS DETALHES -->
                     <p><strong>Prioridade:</strong> Baixa</p>
                 </div>
             </div>
@@ -127,7 +132,7 @@
     <!-- Adicionar JavaScript para funcionalidade -->
     <script src="script.js"></script>
 
-    <!-- MODAL DE ALERTA CUSTOMIZADO -->
+    <!-- MODAIS (sem alterações aqui) -->
     <div class="modal-overlay" id="custom-alert-overlay" style="display: none;"></div>
     <div class="modal" id="custom-alert-modal" role="alertdialog" aria-modal="true" aria-labelledby="modal-message" style="display: none;">
         <div class="modal-content">
@@ -135,9 +140,7 @@
             <button class="modal-close-btn" id="modal-close-btn">OK</button>
         </div>
     </div>
-    <!-- FIM DO MODAL DE ALERTA -->
 
-    <!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO -->
     <div class="modal-overlay" id="delete-confirm-overlay" style="display: none;"></div>
     <div class="modal" id="delete-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="delete-confirm-message" style="display: none;">
         <div class="modal-content">
@@ -148,9 +151,7 @@
             </div>
         </div>
     </div>
-    <!-- FIM DO MODAL DE CONFIRMAÇÃO -->
 
-    <!-- MODAL DE EDIÇÃO DE TAREFA -->
     <div class="modal-overlay" id="edit-task-overlay" style="display: none;"></div>
     <div class="modal" id="edit-task-modal" role="dialog" aria-modal="true" aria-labelledby="edit-task-title-heading" style="display: none;">
         <div class="modal-content">
@@ -164,12 +165,7 @@
                     <label for="edit-task-details-input">Detalhes:</label>
                     <textarea id="edit-task-details-input" name="edit-task-details" rows="3"></textarea>
                 </div>
-                <!-- REMOVIDO: Campo de Data de Vencimento da Edição
-                <div class="form-group">
-                    <label for="edit-task-dueDate-input">Data de Vencimento (AAAA-MM-DD):</label>
-                    <input type="text" id="edit-task-dueDate-input" name="edit-task-dueDate" placeholder="AAAA-MM-DD">
-                </div>
-                 -->
+                <!-- CAMPO DE DATA DE VENCIMENTO JÁ ESTAVA REMOVIDO DO MODAL DE EDIÇÃO -->
                 <div class="form-group">
                     <label for="edit-task-priority-select">Prioridade:</label>
                     <select id="edit-task-priority-select" name="edit-task-priority">
@@ -185,7 +181,6 @@
             </form>
         </div>
     </div>
-    <!-- FIM DO MODAL DE EDIÇÃO -->
 
 </body>
 </html>
