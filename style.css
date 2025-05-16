@@ -144,33 +144,18 @@ body {
     font-style: italic;
 }
 
+/* ESTILOS PARA #new-task-dueDate-input REMOVIDOS */
 /* >> ESTILO DISTINTO 3: Input de Data de Vencimento (#new-task-dueDate-input) << */
-#new-task-dueDate-input {
-    flex-grow: 0; 
-    min-width: 150px; 
-    flex-basis: 170px; 
-    padding: 11px 14px;
-    border: 1px dotted var(--border-color); 
-    border-radius: 6px;
-    background-color: var(--input-bg);
-    color: var(--text-secondary);
-}
-#new-task-dueDate-input:focus {
-    border-color: var(--primary-color);
-    border-style: solid; 
-    background-color: var(--input-bg-focus);
-    box-shadow: 0 0 0 2px var(--shadow-color-light); 
-    color: var(--text-primary);
-}
-#new-task-dueDate-input::placeholder {
-    font-style: italic;
-    opacity: 0.7;
-}
+/* 
+#new-task-dueDate-input { ... } 
+#new-task-dueDate-input:focus { ... }
+#new-task-dueDate-input::placeholder { ... }
+*/
 
 
 /* >> ESTILO DISTINTO 4: Select de Prioridade (#new-task-priority) << */
 #new-task-priority {
-    flex-grow: 0;
+    flex-grow: 1; /* Pode precisar de ajuste se o layout ficar estranho */
     min-width: 140px; 
     padding: 11px 16px;
     padding-right: 35px;
@@ -371,18 +356,11 @@ body {
     margin-left: auto;
 }
 
-.task-due-date {
-    font-size: 0.88rem;
-    color: var(--text-secondary);
-    white-space: nowrap;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
-.task-due-date i {
-    font-size: 0.95em;
-    margin-bottom: -1px;
-}
+/* ESTILOS PARA .task-due-date REMOVIDOS */
+/*
+.task-due-date { ... }
+.task-due-date i { ... }
+*/
 
 .task-priority {
     font-size: 0.78rem;
@@ -479,7 +457,7 @@ body {
     color: var(--text-secondary);
 }
 
-.task-card.completed .task-due-date,
+/* .task-card.completed .task-due-date, (REMOVIDO) */
 .task-card.completed .task-priority {
     /* Atenuado pelo card pai */
 }
@@ -511,7 +489,7 @@ body {
     .filter-sort { margin-left: 0; }
     #new-task-input { min-width: 120px; }
     #new-task-details { min-width: 100px; flex-basis: 120px; }
-    #new-task-dueDate-input { min-width: 130px; flex-basis: 150px; } 
+    /* #new-task-dueDate-input { min-width: 130px; flex-basis: 150px; } REMOVIDO */
     #new-task-priority { min-width: 120px; }
 
 
@@ -539,7 +517,7 @@ body {
     .task-checkbox { margin-top: 3px; }
     .task-meta {
         width: 100%;
-        justify-content: space-between;
+        justify-content: flex-end; /* Ajustado para alinhar prioridade à direita */
         margin-left: 0;
         margin-top: 5px;
     }
@@ -576,12 +554,12 @@ body {
     }
     #new-task-input { order: 1; width: 100%; min-width: unset; flex-basis: auto;}
     #new-task-details { order: 2; width: 100%; min-width: unset; flex-basis: auto;}
-    #new-task-dueDate-input { order: 3; width: 100%; min-width: unset; flex-basis: auto;}
-    #new-task-priority { order: 4; width: 100%; min-width: unset;} 
-    #add-task-btn { order: 5; width: 100%; justify-content: center; } 
+    /* #new-task-dueDate-input { order: 3; ... } REMOVIDO */
+    #new-task-priority { order: 3; width: 100%; min-width: unset;} /* Ordem ajustada */
+    #add-task-btn { order: 4; width: 100%; justify-content: center; }  /* Ordem ajustada */
 
     .filter-sort {
-        order: 6; 
+        order: 5; /* Ordem ajustada */
         width: 100%;
         justify-content: space-between;
         margin-left: 0;
@@ -593,10 +571,11 @@ body {
     .task-card { padding: 12px; margin-bottom: 12px; border-radius: 8px; border-left-width: 4px; }
 
     .task-title { font-size: 1.05rem; }
-    .task-due-date, .task-priority { font-size: 0.8rem; }
+    /* .task-due-date, (REMOVIDO) */
+    .task-priority { font-size: 0.8rem; }
     .task-priority { padding: 3px 10px; }
 
-    .task-meta { margin-top: 8px; }
+    .task-meta { margin-top: 8px; justify-content: flex-end; } /* Ajustado para alinhar prioridade à direita */
     .task-card-actions { gap: 5px; margin-top: 12px;}
     .task-card-actions button { width: 36px; height: 36px; font-size: 1rem; }
 
